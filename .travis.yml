@@ -17,6 +17,7 @@ deploy:
   file: 
     - "main.pdf"
     - "README.pdf"
+  skip_cleanup: true
   on:
     repo: zhuosongz/travis-test
     branches:    # ← new!
