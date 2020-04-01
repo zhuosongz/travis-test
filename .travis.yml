@@ -1,48 +1,19 @@
 os: linux
-
-# we use the R VM because it contains LaTeX and pandoc
 language: r
-
-# we need super user privileges, so we depend on the old travis-ci infrastructure
 sudo: required
-
-# we can install additional software
-apt_packages:
-# we download pdf2djvu to also generate a djvu file of our LaTeX source
-  # - pdf2djvu
-
+apt_packages: 
 script:
-# if you have a markdown source, you can use pandoc to convert it to a LaTeX document
-  - cat README.md | grep --invert-match "\[\!\[" > README2.md
-  - cat README2.md | grep --invert-match "Howto Deploy LaTeX Documents" > README.md
-  - pandoc -s --from=markdown_github --to=latex -M title="Howto Deploy LaTeX Documents" -M author="Simon Waldherr" -V geometry:a4paper,margin=2cm -o README.tex README.md
-
-# in the next step we use pdflatex to convert .tex to .pdf
-# of course we could use pandoc for this also, but pdflatex generates nicer PDFs
-  - pdflatex -interaction=nonstopmode main.tex
-  - pdflatex -interaction=nonstopmode README.tex
-
-# now we convert the pdf file to a much smaller djvu document  
-# - pdf2djvu -d 1200 -o main.djvu main.pdf
-after_success:
-# upload the previously generated pdf file to simonwaldherr.de (use $UPLOADSECRET as password)
-#  - wget --post-file=HowtoDeployLatexDocs-DE.pdf -q -O- "https://simonwaldherr.de/pdf/?repo=HowtoDeployLatexDocs&mode=save&key=$UPLOADSECRET&pull=$TRAVIS_PULL_REQUEST"
-
+- cat README.md | grep --invert-match "\[\!\[" > README2.md
+- cat README2.md | grep --invert-match "Howto Deploy LaTeX Documents" > README.md
+- pandoc -s --from=markdown_github --to=latex -M title="Howto Deploy LaTeX Documents"
+  -M author="Simon Waldherr" -V geometry:a4paper,margin=2cm -o README.tex README.md
+- pdflatex -interaction=nonstopmode main.tex
+- pdflatex -interaction=nonstopmode README.tex
+after_success: 
 deploy:
-
-# provider releases means GitHub Releases
   provider: releases
-  api_key: SvZge6gOfnzX54NQhRr9zQ
-
-# Travis CI public key encrypted GitHub oauth key for pushing to GitHub Releases
-  secure: MIIEpAIBAAKCAQEAwBi6pK9VH7a0xYvSTqHUgmwj/oyYYLdrgAB0wc0tvmVBXb1z1SEj3QHeZhIHh9QdFha6LFX7zKdEVWuV/IMf4Vqwj8P8Q7h5z0TSMsVVrSNphBTk Znkn3DItDtvTiJg82Xtg5AyWH+Hga+SFKqnFcLWLlQmvykTuKAoVUHhS11chBPAk tbSM3pm2o0r8grCB7O9xEge/GCduSCP9oWs8y8bzBQlQIWmhu7WkfpJQFBevgmBa j/96DFlJt9oli9NgU/IevxXSdYkAH27O7qcvynHKUp1acn6e6jS/sx6FlzXrOzdU VP85oVIrKxsjBdmn4decnACCj8tuu6luAL/aYQIDAQABAoIBAQCfR6HzDaKykidg KaivJIZ1wj8yQNfUUiIj17z4OS310jWaCY3zKfB3v6Xt0oNF//5CI4QpYP5RWlxR y8xovT0A+dauzl3stRjjYPg9utxonJVQPJaJ1WnUrhIoYOQMPdcuqZvUXA9azkrs i2ZT0sNwyke7w3VsbS1gK8QyniJqhFSLzN3bJ3F3Ov1FO2RA13xvSz/Rwgg5hr2N EDwB01S7ovYwiCnS5UMu30cHoeYThcRGkPx+UQcwdXG2EssPj9Cw9gXK0EJVNfYb G07g8HmXmwPoG2md2fBOCRTA/8CmFQsqHqaoJi8UG4zfvyADwp/ZKpXUGlT/q5Pz 5YIqY5VlAoGBAPwCWat4l1tcY7yXgtxTlctIoJZ3XfPcuAwkLXohSL/XCmJX22aO g2BBJ8owXTzA+gF/bnJriCtLxzmA8FZeZlbXwbkX4XTlDDvDo1XOdPsXoHF3Q7Yt KNDQ5UhhYFJRuk0Fd9BeymMVlzsety2VxLAO6kHIf5gOy5nEMMVig2k7AoGBAMMj ffuWSXgV5faAl6W3SUVX8ItGlj5LpoZwiVJtBBN2gcqoM++i9912t5oeYIC2QATj 2eY5QNFiv4h0llWn3rF4gG7roae0KsLkpHiN+FCPFjSLP2cbVrpKDaBSyofVoZoA lKpUOXL1c4ruJo6KdxS9sVPNtogGe4ojx9515HETAoGBALtep/sUyzxzYfh7kiFs yCf/1N5q2+EPz4u/bkyq6KMyKJdcCVWkSkvLxeDPutMMDBYHAEB0cSb3zaWUl50v zNluy6tp9QhrsH/TAuMugM2cEH+slBykUP+JAaCiPfKWr3TKxv2XLNUk3W9oc/uh qj7YqBXHFA8jmP+33ic0Cs63AoGABLv5tH7i7WzqlV5tT3Hw7yPBDD/8KSrAsYZN bpiCfs5jO7109R1pEhBtR+nwwW6qgvPcN3+wGORibTcW5qEaAAhCZW6GD4GJgAz4 CIy5N4shKMkwEppRMlfVmMwpab4/G3NkJ/W/JxDZasd4XADz/qbThIr7ILW3jZRs pvMJRc0CgYBGNKo1UTb7VKdimJyqTBDUUIXYufjGOE/JbTxRtB9+YqqkG7fw8BDO 5xqfE1fnxCr9HUtbvKMe9mJouNn9gslyH9IhTvF0IcPL9kDqSn+Yi7JFpcweb9Bc Eg0OV4XdOZp+6d7piv649IAGIGQa2a64Aul98whFyn4ggC0eo/rdEQ==
-
-# lY9d0fRtaeW16zSZMRiUf2zX85k1kF4tyW20+/tLW3oeIXgKuuNHydULmNOqtVomhBwwbhsnciZjx4k/+LQ/z6OtQIxRFLUvEzwaphCTH5pqof94HeDtjwSP/NTv5dOn46IGmJ0gGopD5YE5acCpZVdkkyrp36c4rsk4ZG6RjxKy5kQ+jSIJ93vnT1y4gOlUj1zWh5u7DuTKyvEJHse7iO3WE7KXHQtT7snOQQQ/wjYcpcCBuYTqqdsSJWoO68yLJosNF32pCBYj/tMuGDOPNbNFxEmJM3Bx0xkDDuVGtQCVs3p89Q49LBEVzL3bGNLBhsdbu0PHQrsEaHOVlXeIG3wuE0gHtYhiQ8QYaZ3BOSoaLZ0HwH2xhyF9g0D/x2+pHdXn2MRSXkwKd2AqAwX3X1guBklVJMpGWM9vKD7f2E8MR8mNWoitiAwHr0ZSHL747TBOviUU8J2w0EeJDBIk4tsJArn8KmsuIzvLTjjmImxcvUTYn0YOD7bpXhzn5sgtVqWlkgojq2MHqvFfZSbvcnx13azZrL2c8bopXD3x2alYGrtFE+6g/3Px6xb7wlXcnqimAKlrhh/E+9Fsjo/M/9kItCv+JkYVmCu08Q6Ps12wZ7ZAi0xKlnCxtKwxQvaR0FWouUUK0e/v7wQwPPxWj5cwzOqXjdykC1V6x18/mEs=
-
-# the list of files to upload
-  file: 
-    - "main.pdf"
-    - "README.pdf"
-  skip_cleanup: true
+  api_key:
+    secure: DnXG2ixir/5/no7wjpzrGCJuhy34kskmxIJRBcnR1m2KtmMeeQ1TYDALb92Uu7s0DLT+wVUr4ExFYAYjOVz65UANmiEAghO1JdYtDlP+VeGcqJgp7N8c9NaCERgtWi3UK2GoBWGlbEJhqGM1PnbXT/3FVm7+KuLk1/PdyUSbFgXzbYK3GV+Tz5C4NWkp5tEtjmcH/YfLnWHZFhhGlQXVIeCWNDD+2qp3bvxQr3sHErGN9p77je+WVJD7lwH9Z0ibzJZIddxy/GGgNjXHGI3ckPq4PMHnz4hcNeG5XB2TFKkeLhMgucx4ZDiqzKpzOUF1NFeqrE8CONBa5PZim94iyHqrWtFTzPPV7QGjVXno6lnWeQ9Mr22/Re8UTc/0RlQy+gMS8RpbzHny5QOSzmgVgZOFX6upi2TnYx9lMIUQ2jk2gpmbP4W5XaAbEB2ro4P2p1wLc3G0Uw0rHBfqJFr+SRf+kvdIdySkuPJ+0adz2uig/67aRpinauwi6daAMt9DrhjQ0SvrIq6ucHMperAkkb5qu0v91Fjn0gkVJWulbiBheaRt8IATJMrreMUbR0L8AvPhy7uNofgLihC1gsGeeCIbQkkKC4nWqXp+7Krzf1kxbAK/jM5GMQC4V7ho8Fu/qcrBFXAR4mgNlxGHOnylmfCu7lWW4cF1133XRpzYAc4=
+  file: main.pdf
   on:
     repo: zhuosongz/travis-test
