@@ -19,3 +19,6 @@ deploy:
     - "README.pdf"
   on:
     repo: zhuosongz/travis-test
+    branches:    # ← new!
+      only:      # ← new!
+        - master # ← new!
