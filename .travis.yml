@@ -11,7 +11,7 @@ script:
 - pdflatex -interaction=nonstopmode README.tex
 after_success: 
 deploy:
-  provider: releases
+  provider: branch
   api_key:
     secure: DnXG2ixir/5/no7wjpzrGCJuhy34kskmxIJRBcnR1m2KtmMeeQ1TYDALb92Uu7s0DLT+wVUr4ExFYAYjOVz65UANmiEAghO1JdYtDlP+VeGcqJgp7N8c9NaCERgtWi3UK2GoBWGlbEJhqGM1PnbXT/3FVm7+KuLk1/PdyUSbFgXzbYK3GV+Tz5C4NWkp5tEtjmcH/YfLnWHZFhhGlQXVIeCWNDD+2qp3bvxQr3sHErGN9p77je+WVJD7lwH9Z0ibzJZIddxy/GGgNjXHGI3ckPq4PMHnz4hcNeG5XB2TFKkeLhMgucx4ZDiqzKpzOUF1NFeqrE8CONBa5PZim94iyHqrWtFTzPPV7QGjVXno6lnWeQ9Mr22/Re8UTc/0RlQy+gMS8RpbzHny5QOSzmgVgZOFX6upi2TnYx9lMIUQ2jk2gpmbP4W5XaAbEB2ro4P2p1wLc3G0Uw0rHBfqJFr+SRf+kvdIdySkuPJ+0adz2uig/67aRpinauwi6daAMt9DrhjQ0SvrIq6ucHMperAkkb5qu0v91Fjn0gkVJWulbiBheaRt8IATJMrreMUbR0L8AvPhy7uNofgLihC1gsGeeCIbQkkKC4nWqXp+7Krzf1kxbAK/jM5GMQC4V7ho8Fu/qcrBFXAR4mgNlxGHOnylmfCu7lWW4cF1133XRpzYAc4=
   file: 
@@ -20,5 +20,5 @@ deploy:
   skip_cleanup: true
   on:
     repo: zhuosongz/travis-test
-    all_branches: true
+    # all_branches: true
     # branchs: master
