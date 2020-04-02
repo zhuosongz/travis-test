@@ -23,4 +23,5 @@ deploy:
     repo: zhuosongz/travis-test
     # all_branches: true
     branchs: master
-    tags: true
+    tags: true 
+    # tag added 
