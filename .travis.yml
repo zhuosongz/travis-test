@@ -20,4 +20,5 @@ deploy:
   skip_cleanup: true
   on:
     repo: zhuosongz/travis-test
-    branchs: master
+    all_branches: true
+    # branchs: master
