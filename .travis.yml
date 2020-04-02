@@ -9,6 +9,7 @@ script:
   -M author="Simon Waldherr" -V geometry:a4paper,margin=2cm -o README.tex README.md
 - pdflatex -interaction=nonstopmode main.tex
 - pdflatex -interaction=nonstopmode README.tex
+- mkdir -p site/src && cp main.pdf site/src/
 after_success: 
 deploy:
   provider: releases
@@ -21,4 +22,5 @@ deploy:
   on:
     repo: zhuosongz/travis-test
     # all_branches: true
-    # branchs: master
+    branchs: master
+    tags: true
